@@ -1,0 +1,12 @@
+<template>
+    <template if:true={latitude}>
+        <lightning-map
+            map-markers={mapMarkers}
+            zoom-level="15"
+            markers-title="Ubicación del Evento"
+        ></lightning-map>
+    </template>
+    <template if:true={error}>
+        <div class="slds-text-color_error">{error}</div>
+    </template>
+</template>

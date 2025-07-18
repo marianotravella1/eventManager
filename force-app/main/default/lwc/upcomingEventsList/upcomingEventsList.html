@@ -1,0 +1,58 @@
+<template>
+  <lightning-card title="Próximos Eventos" icon-name="standard:event">
+    <lightning-button
+      label="Nuevo Evento"
+      slot="actions"
+      onclick={handleCreateEvent}
+    >
+    </lightning-button>
+
+    <div class="slds-m-around_medium">
+      <template if:true={isLoading}>
+        <lightning-spinner
+          alternative-text="Loading"
+          size="medium"
+        ></lightning-spinner>
+      </template>
+      <template if:false={isLoading}>
+        <template for:each={events} for:item="event">
+          <div key={event.Id} class="slds-box slds-m-bottom_small event-item">
+            <p class="slds-text-heading_small"><strong>{event.Name}</strong></p>
+            <p class="slds-text-body_small">
+              <lightning-formatted-date-time
+                value={event.Start_DateTime__c}
+                year="numeric"
+                month="long"
+                day="2-digit"
+                hour="2-digit"
+                minute="2-digit"
+              >
+              </lightning-formatted-date-time>
+            </p>
+            <div class="slds-m-top_small">
+              <lightning-button-group>
+                <lightning-button
+                  label="Ver"
+                  data-id={event.Id}
+                  onclick={handleView}
+                ></lightning-button>
+                <lightning-button
+                  label="Modificar"
+                  data-id={event.Id}
+                  onclick={handleEdit}
+                ></lightning-button>
+              </lightning-button-group>
+            </div>
+          </div>
+        </template>
+
+        <!-- Muestra un mensaje si no hay eventos para mostrar -->
+        <template if:true={noEvents}>
+          <div class="slds-align_absolute-center">
+            No hay próximos eventos programados.
+          </div>
+        </template>
+      </template>
+    </div>
+  </lightning-card>
+</template>

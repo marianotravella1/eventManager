@@ -1,14 +1,16 @@
-import { LightningElement, wire } from 'lwc';
+import { LightningElement, wire, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import getUpcomingEvents from '@salesforce/apex/EventListController.getUpcomingEvents';
 
 export default class UpcomingEventsList extends NavigationMixin(LightningElement) {
     
-    events = [];
+    @track events = [];
+    @track filteredEvents = [];
     isLoading = true;
     error;
     sortBy = 'Start_DateTime__c';
     isAscending = true;
+    searchTerm = '';
 
     
     @wire(getUpcomingEvents, { sortBy: '$sortBy', isAscending: '$isAscending' })
@@ -16,17 +18,29 @@ export default class UpcomingEventsList extends NavigationMixin(LightningElement
         this.isLoading = false;
         if (data) {
             this.events = data;
+            this.filterEvents();
             this.error = undefined;
         } else if (error) {
             this.error = error;
             this.events = [];
+            this.filteredEvents = [];
         }
     }
 
     get noEvents() {
-        return this.events.length === 0 && !this.isLoading;
+        return this.filteredEvents.length === 0 && !this.isLoading;
     }
 
+    handleSearch(event) {
+        this.searchTerm = event.target.value.toLowerCase();
+        this.filterEvents();
+    }
+
+    filterEvents() {
+        this.filteredEvents = this.events.filter(event => {
+            return event.Name.toLowerCase().includes(this.searchTerm);
+        });
+    }
 
     handleCreateEvent() {
         this[NavigationMixin.Navigate]({
@@ -64,5 +78,5 @@ export default class UpcomingEventsList extends NavigationMixin(LightningElement
         this.sortBy = field;
         this.isAscending = !this.isAscending;
     }
-    
+      
 }

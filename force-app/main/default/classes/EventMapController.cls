@@ -13,7 +13,7 @@ public with sharing class EventMapController {
         Maps_Setting__mdt setting = [SELECT API_Key__c FROM Maps_Setting__mdt LIMIT 1];
         String key = setting.API_Key__c;
         
-        // Get location of the event
+        // Get location event's location
         Event__c event = [SELECT Location__Latitude__s, Location__Longitude__s 
                           FROM Event__c 
                           WHERE Id = :recordId 

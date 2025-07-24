@@ -15,6 +15,10 @@
         ></lightning-spinner>
       </template>
       <template if:false={isLoading}>
+        <lightning-button-menu label="Order by" alternative-text="Sort Options" class="slds-m-bottom_small">
+          <lightning-menu-item label="Name" data-field="Name" onclick={handleSort}></lightning-menu-item>
+          <lightning-menu-item label="Date" data-field="Start_DateTime__c" onclick={handleSort}></lightning-menu-item>
+        </lightning-button-menu>
         <template for:each={events} for:item="event">
           <div key={event.Id} class="slds-box slds-m-bottom_small event-item">
             <p class="slds-text-heading_small"><strong>{event.Name}</strong></p>

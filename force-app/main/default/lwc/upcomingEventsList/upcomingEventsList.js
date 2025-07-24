@@ -7,9 +7,11 @@ export default class UpcomingEventsList extends NavigationMixin(LightningElement
     events = [];
     isLoading = true;
     error;
+    sortBy = 'Start_DateTime__c';
+    isAscending = true;
 
     
-    @wire(getUpcomingEvents)
+    @wire(getUpcomingEvents, { sortBy: '$sortBy', isAscending: '$isAscending' })
     wiredEvents({ error, data }) {
         this.isLoading = false;
         if (data) {
@@ -21,7 +23,6 @@ export default class UpcomingEventsList extends NavigationMixin(LightningElement
         }
     }
 
-    // Propiedad computada para saber si la lista de eventos está vacía.
     get noEvents() {
         return this.events.length === 0 && !this.isLoading;
     }
@@ -57,4 +58,11 @@ export default class UpcomingEventsList extends NavigationMixin(LightningElement
             }
         });
     }
+
+    handleSort(event) {
+        const field = event.target.dataset.field;
+        this.sortBy = field;
+        this.isAscending = !this.isAscending;
+    }
+    
 }
